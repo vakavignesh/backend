@@ -2,198 +2,94 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "sites_Rg_Cloud_Backend_name": {
-            "defaultValue": "Rg-Cloud-Backend",
-            "type": "String"
-        },
-        "serverfarms_ASP_RgCloudVigneshVaka_85c1_externalid": {
-            "defaultValue": "/subscriptions/297bb58d-ff69-447c-8c7b-9414b5634677/resourceGroups/Rg-Cloud-VigneshVaka/providers/Microsoft.Web/serverfarms/ASP-RgCloudVigneshVaka-85c1",
+        "flexibleServers_vigneshsql_name": {
+            "defaultValue": "vigneshsql",
             "type": "String"
         }
     },
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.Web/sites",
-            "apiVersion": "2022-03-01",
-            "name": "[parameters('sites_Rg_Cloud_Backend_name')]",
-            "location": "Central US",
-            "kind": "app",
+            "type": "Microsoft.DBforMySQL/flexibleServers",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[parameters('flexibleServers_vigneshsql_name')]",
+            "location": "East US",
+            "sku": {
+                "name": "Standard_B1ms",
+                "tier": "Burstable"
+            },
             "properties": {
-                "enabled": true,
-                "hostNameSslStates": [
-                    {
-                        "name": "rg-cloud-backend.azurewebsites.net",
-                        "sslState": "Disabled",
-                        "hostType": "Standard"
-                    },
-                    {
-                        "name": "rg-cloud-backend.scm.azurewebsites.net",
-                        "sslState": "Disabled",
-                        "hostType": "Repository"
-                    }
-                ],
-                "serverFarmId": "[parameters('serverfarms_ASP_RgCloudVigneshVaka_85c1_externalid')]",
-                "reserved": false,
-                "isXenon": false,
-                "hyperV": false,
-                "vnetRouteAllEnabled": false,
-                "vnetImagePullEnabled": false,
-                "vnetContentShareEnabled": false,
-                "siteConfig": {
-                    "numberOfWorkers": 1,
-                    "acrUseManagedIdentityCreds": false,
-                    "alwaysOn": false,
-                    "http20Enabled": false,
-                    "functionAppScaleLimit": 0,
-                    "minimumElasticInstanceCount": 0
+                "administratorLogin": "[parameters('flexibleServers_vigneshsql_name')]",
+                "storage": {
+                    "storageSizeGB": 20,
+                    "iops": 360,
+                    "autoGrow": "Enabled"
                 },
-                "scmSiteAlsoStopped": false,
-                "clientAffinityEnabled": true,
-                "clientCertEnabled": false,
-                "clientCertMode": "Required",
-                "hostNamesDisabled": false,
-                "customDomainVerificationId": "358AFD915282EC1143ABCA6F91A9006CE2AD02BB8EA49C526D7B52AEE22DD154",
-                "containerSize": 0,
-                "dailyMemoryTimeQuota": 0,
-                "httpsOnly": true,
-                "redundancyMode": "None",
-                "storageAccountRequired": false,
-                "keyVaultReferenceIdentity": "SystemAssigned"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
-            "apiVersion": "2022-03-01",
-            "name": "[concat(parameters('sites_Rg_Cloud_Backend_name'), '/ftp')]",
-            "location": "Central US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_Rg_Cloud_Backend_name'))]"
-            ],
-            "properties": {
-                "allow": true
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
-            "apiVersion": "2022-03-01",
-            "name": "[concat(parameters('sites_Rg_Cloud_Backend_name'), '/scm')]",
-            "location": "Central US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_Rg_Cloud_Backend_name'))]"
-            ],
-            "properties": {
-                "allow": true
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2022-03-01",
-            "name": "[concat(parameters('sites_Rg_Cloud_Backend_name'), '/web')]",
-            "location": "Central US",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_Rg_Cloud_Backend_name'))]"
-            ],
-            "properties": {
-                "numberOfWorkers": 1,
-                "defaultDocuments": [
-                    "Default.htm",
-                    "Default.html",
-                    "Default.asp",
-                    "index.htm",
-                    "index.html",
-                    "iisstart.htm",
-                    "default.aspx",
-                    "index.php",
-                    "hostingstart.html"
-                ],
-                "netFrameworkVersion": "v6.0",
-                "requestTracingEnabled": false,
-                "remoteDebuggingEnabled": false,
-                "httpLoggingEnabled": false,
-                "acrUseManagedIdentityCreds": false,
-                "logsDirectorySizeLimit": 35,
-                "detailedErrorLoggingEnabled": false,
-                "publishingUsername": "$Rg-Cloud-Backend",
-                "scmType": "GitHubAction",
-                "use32BitWorkerProcess": true,
-                "webSocketsEnabled": false,
-                "alwaysOn": false,
-                "managedPipelineMode": "Integrated",
-                "virtualApplications": [
-                    {
-                        "virtualPath": "/",
-                        "physicalPath": "site\\wwwroot",
-                        "preloadEnabled": false
-                    }
-                ],
-                "loadBalancing": "LeastRequests",
-                "experiments": {
-                    "rampUpRules": []
+                "version": "5.7",
+                "availabilityZone": "3",
+                "maintenanceWindow": {
+                    "customWindow": "Disabled",
+                    "dayOfWeek": 0,
+                    "startHour": 0,
+                    "startMinute": 0
                 },
-                "autoHealEnabled": false,
-                "vnetRouteAllEnabled": false,
-                "vnetPrivatePortsCount": 0,
-                "localMySqlEnabled": false,
-                "ipSecurityRestrictions": [
-                    {
-                        "ipAddress": "Any",
-                        "action": "Allow",
-                        "priority": 2147483647,
-                        "name": "Allow all",
-                        "description": "Allow all access"
-                    }
-                ],
-                "scmIpSecurityRestrictions": [
-                    {
-                        "ipAddress": "Any",
-                        "action": "Allow",
-                        "priority": 2147483647,
-                        "name": "Allow all",
-                        "description": "Allow all access"
-                    }
-                ],
-                "scmIpSecurityRestrictionsUseMain": false,
-                "http20Enabled": false,
-                "minTlsVersion": "1.2",
-                "scmMinTlsVersion": "1.2",
-                "ftpsState": "FtpsOnly",
-                "preWarmedInstanceCount": 0,
-                "functionsRuntimeScaleMonitoringEnabled": false,
-                "minimumElasticInstanceCount": 0,
-                "azureStorageAccounts": {}
+                "replicationRole": "None",
+                "network": {},
+                "backup": {
+                    "backupRetentionDays": 7,
+                    "geoRedundantBackup": "Disabled"
+                },
+                "highAvailability": {
+                    "mode": "Disabled"
+                }
             }
         },
         {
-            "type": "Microsoft.Web/sites/deployments",
-            "apiVersion": "2022-03-01",
-            "name": "[concat(parameters('sites_Rg_Cloud_Backend_name'), '/ae24e0f3f54f4eb29c50e53f619e25b6')]",
-            "location": "Central US",
+            "type": "Microsoft.DBforMySQL/flexibleServers/databases",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[concat(parameters('flexibleServers_vigneshsql_name'), '/information_schema')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_Rg_Cloud_Backend_name'))]"
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('flexibleServers_vigneshsql_name'))]"
             ],
             "properties": {
-                "status": 4,
-                "author_email": "N/A",
-                "author": "N/A",
-                "deployer": "GITHUB_ZIP_DEPLOY",
-                "message": "{\"type\":\"deployment\",\"sha\":\"b224e5b1755d86a1263d07f2b580150b3a387d6f\",\"repoName\":\"vakavignesh/backend\",\"slotName\":\"Production\",\"commitMessage\":\"Add or update the Azure App Service build and deployment workflow config\"}",
-                "start_time": "2022-11-17T22:04:47.1883689Z",
-                "end_time": "2022-11-17T22:04:51.8133126Z",
-                "active": true
+                "charset": "utf8",
+                "collation": "utf8_general_ci"
             }
         },
         {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2022-03-01",
-            "name": "[concat(parameters('sites_Rg_Cloud_Backend_name'), '/', parameters('sites_Rg_Cloud_Backend_name'), '.azurewebsites.net')]",
-            "location": "Central US",
+            "type": "Microsoft.DBforMySQL/flexibleServers/databases",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[concat(parameters('flexibleServers_vigneshsql_name'), '/mysql')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_Rg_Cloud_Backend_name'))]"
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('flexibleServers_vigneshsql_name'))]"
             ],
             "properties": {
-                "siteName": "Rg-Cloud-Backend",
-                "hostNameType": "Verified"
+                "charset": "latin1",
+                "collation": "latin1_swedish_ci"
+            }
+        },
+        {
+            "type": "Microsoft.DBforMySQL/flexibleServers/databases",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[concat(parameters('flexibleServers_vigneshsql_name'), '/performance_schema')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('flexibleServers_vigneshsql_name'))]"
+            ],
+            "properties": {
+                "charset": "utf8",
+                "collation": "utf8_general_ci"
+            }
+        },
+        {
+            "type": "Microsoft.DBforMySQL/flexibleServers/databases",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[concat(parameters('flexibleServers_vigneshsql_name'), '/sys')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.DBforMySQL/flexibleServers', parameters('flexibleServers_vigneshsql_name'))]"
+            ],
+            "properties": {
+                "charset": "utf8",
+                "collation": "utf8_general_ci"
             }
         }
     ]
