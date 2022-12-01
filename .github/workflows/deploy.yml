@@ -18,4 +18,4 @@ jobs:
         with:
           subscriptionId: 297bb58d-ff69-447c-8c7b-9414b5634677
           resourceGroupName: Rg-Cloud-VigneshVaka
-          template: ../templates/staticwebapp.json
+          template: ../templates/templates.json
