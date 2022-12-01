@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "sites_Rg_Cloud_Backend1_name": {
-            "defaultValue": "Rg-Cloud-Backend1",
+        "sites_Rg_Cloud_Backend_name": {
+            "defaultValue": "Rg-Cloud-Backend",
             "type": "String"
         },
         "serverfarms_ASP_RgCloudVigneshVaka_85c1_externalid": {
