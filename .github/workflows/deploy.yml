@@ -3,7 +3,7 @@ on:
 
 jobs:
   createserver:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Check out Template
         uses: actions/checkout@main
