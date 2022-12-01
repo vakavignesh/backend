@@ -11,7 +11,7 @@ jobs:
       - name: Login
         uses: azure/login@v1
         with:
-          creds: $({secrets.AZURE_CREDS})
+          creds: ${{secrets.AZURE_CREDS}}
 
       - name: Deploy
         uses: azure/arm-deploy@v1
