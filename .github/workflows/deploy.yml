@@ -17,5 +17,5 @@ jobs:
         uses: azure/arm-deploy@v1
         with:
           subscriptionId: 297bb58d-ff69-447c-8c7b-9414b5634677
-          resourceGroupName: Rg-Cloud-VigneshVaka
+          resourceGroupName: static-web-app
           template: ../templates/templates.json
